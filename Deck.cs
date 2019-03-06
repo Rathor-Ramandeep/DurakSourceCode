@@ -15,7 +15,7 @@ namespace durakTesting
     public class Deck
     {
         // deck sizes
-        public static int DEFAULT_DECK_SIZE = 52;
+        public static int FULL_DECK_SIZE = 52;
         public static int NORMAL_DECK_SIZE = 36;
         public static int SMALL_DECK_SIZE = 20;
 
@@ -28,7 +28,7 @@ namespace durakTesting
         // Default constructor
         public Deck()
         {
-            Initialize(DEFAULT_DECK_SIZE);
+            Initialize(NORMAL_DECK_SIZE);
         }
 
         // Parametrized constructor that takes the size of the deck
@@ -44,22 +44,69 @@ namespace durakTesting
         /// <param name="size"></param>
         public void Initialize(int size)
         {
-            for (int i = 0; i < size; i++)
+            // if an invalid size is provided
+            if(size != NORMAL_DECK_SIZE && size != FULL_DECK_SIZE && size != SMALL_DECK_SIZE)
             {
-                for(int suits=0; suits < PlayingCard.SUITS; suits++)
+                throw new ArgumentException("The deck size can only be either 20, 36 or 52");
+            }
+            if(size == NORMAL_DECK_SIZE)
+            {
+                for (int i = 0; i < size; i++)
                 {
-                    for(int ranks=0; ranks < PlayingCard.RANKS; ranks++)
+                    for (int suits = 0; suits < PlayingCard.SUITS; suits++)
                     {
-                        PlayingCard card = new PlayingCard();
-                        card.Suit = suits;
-                        card.Rank = ranks;
-                        if(MyDeck.Count < size)
+                        for (int ranks = 4; ranks < PlayingCard.RANKS; ranks++)
                         {
-                            MyDeck.Add(card);
+                            PlayingCard card = new PlayingCard();
+                            card.Suit = suits;
+                            card.Rank = ranks;
+                            if (MyDeck.Count < size)
+                            {
+                                MyDeck.Add(card);
+                            }
                         }
                     }
                 }
             }
+            else if(size == FULL_DECK_SIZE)
+            {
+                for (int i = 0; i < size; i++)
+                {
+                    for (int suits = 0; suits < PlayingCard.SUITS; suits++)
+                    {
+                        for (int ranks = 0; ranks < PlayingCard.RANKS; ranks++)
+                        {
+                            PlayingCard card = new PlayingCard();
+                            card.Suit = suits;
+                            card.Rank = ranks;
+                            if (MyDeck.Count < size)
+                            {
+                                MyDeck.Add(card);
+                            }
+                        }
+                    }
+                }
+            }
+            else if (size == SMALL_DECK_SIZE)
+            {
+                for (int i = 0; i < size; i++)
+                {
+                    for (int suits = 0; suits < PlayingCard.SUITS; suits++)
+                    {
+                        for (int ranks = 8; ranks < PlayingCard.RANKS; ranks++)
+                        {
+                            PlayingCard card = new PlayingCard();
+                            card.Suit = suits;
+                            card.Rank = ranks;
+                            if (MyDeck.Count < size)
+                            {
+                                MyDeck.Add(card);
+                            }
+                        }
+                    }
+                }
+            }
+
         }
 
         public void Shuffle()
