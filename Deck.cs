@@ -57,9 +57,7 @@ namespace durakTesting
                     {
                         for (int ranks = 4; ranks < PlayingCard.RANKS; ranks++)
                         {
-                            PlayingCard card = new PlayingCard();
-                            card.Suit = suits;
-                            card.Rank = ranks;
+                            PlayingCard card = new PlayingCard(ranks, suits);
                             if (MyDeck.Count < size)
                             {
                                 MyDeck.Add(card);

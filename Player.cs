@@ -42,7 +42,7 @@ namespace durakTesting
         /// <summary>
         /// PlayCard - Method for playing a card from hand
         /// </summary>
-        public void PlayCard()
+        virtual public void PlayCard()
         {
 
         }
@@ -50,7 +50,7 @@ namespace durakTesting
         public PlayingCard LowestCard(PlayingCard trumpCard)
         {
             //create playing card object to return
-            PlayingCard theCard = new PlayingCard();
+            PlayingCard theCard = null;
 
             //create list of playing cards to isolate for lowest card
             List<PlayingCard> cardsWithTrumpSuit = new List<PlayingCard>();
@@ -61,15 +61,22 @@ namespace durakTesting
                 if (card.Suit == trumpCard.Suit)
                     cardsWithTrumpSuit.Add(card);
             }
-            //find lowest card in cardsWithTrumpSuit
-            for (int i = 0; i < cardsWithTrumpSuit.Count-1; i++)
+            //find lowest card in cardsWithTrumpSuit if anything was added in cardsWithTrumpSuit
+            if(cardsWithTrumpSuit.Count > 0)
             {
-                if (cardsWithTrumpSuit[i].Value < cardsWithTrumpSuit[i+1].Value)
-                {
-                    theCard = cardsWithTrumpSuit[i];
+                //assume first card is the smallest
+                PlayingCard minValueCard = cardsWithTrumpSuit[0];
+                // iterate through the list to find the actual smallest card
+                for (int i = 0; i <= cardsWithTrumpSuit.Count - 2; i++)
+                {   
+                    if (cardsWithTrumpSuit[i+1].Value < minValueCard.Value)
+                    {
+                        minValueCard = cardsWithTrumpSuit[i + 1];
+                    }
                 }
+                theCard = minValueCard;
             }
-
+            
             return theCard;
         }
 

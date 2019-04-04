@@ -13,7 +13,7 @@
 using System;
 using System.Drawing;
 
-namespace tutorial8
+namespace durakTesting
 {
     public class PlayingCard
     {

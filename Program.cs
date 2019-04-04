@@ -8,7 +8,7 @@ namespace durakTesting
         //constant for cards per hand
         private const int CARDS_PER_HAND = 6;
         //declare trump card
-        public static PlayingCard trumpCard = new PlayingCard();
+        public static PlayingCard trumpCard = null;
         //declare players
         public static Player player1 = new Player("Player 1");
         public static Player player2 = new Player("Bot 2");
@@ -19,8 +19,11 @@ namespace durakTesting
         {
             try
             {
-                Deck deck1 = new Deck(52);
+               
+                Deck deck1 = new Deck();
                 //Console.WriteLine(deck1.ToString());
+                deck1.Shuffle();
+                deck1.Shuffle();
                 deck1.Shuffle();
                 //Console.WriteLine("******************************");
                 //Console.WriteLine(deck1.ToString());
@@ -119,70 +122,48 @@ namespace durakTesting
         static Player PickFirstTurn(Player player1, Player player2, Player player3, Player player4)
         {
             Player returnPlayer = new Player();
-
+            List<PlayingCard> trumpSuitCards = new List<PlayingCard>();
             PlayingCard player1Lowest = player1.LowestCard(trumpCard);
+            trumpSuitCards.Add(player1Lowest);
             PlayingCard player2Lowest = player2.LowestCard(trumpCard);
+            trumpSuitCards.Add(player2Lowest);
             PlayingCard player3Lowest = player3.LowestCard(trumpCard);
+            trumpSuitCards.Add(player3Lowest);
             PlayingCard player4Lowest = player4.LowestCard(trumpCard);
+            trumpSuitCards.Add(player4Lowest);
 
-            bool p1lessp2 = false;
-            bool p3lessp4 = false;
-            
+            int playerIndex = -1;
+            PlayingCard lowest = new PlayingCard();     //placeholder card to help compare other cards to
+            lowest.Value = 99;      // give high value to start in order to check later
 
-            if (player1Lowest.Value < player2Lowest.Value)
+            for(int index = 0; index < trumpSuitCards.Count; index++)
             {
-                p1lessp2 = true;
+                if(trumpSuitCards[index] !=null)
+                {
+                    if(trumpSuitCards[index].Value < lowest.Value)
+                    {
+                        playerIndex = index;
+                    }
+                }
             }
 
-            if (player3Lowest.Value < player4Lowest.Value)
+            if(playerIndex == 0)
             {
-                p3lessp4 = true;
+                returnPlayer = player1;
+            }
+            else if(playerIndex == 1)
+            {
+                returnPlayer = player2;
+            }
+            else if (playerIndex == 2)
+            {
+                returnPlayer = player3;
+            }
+            else if (playerIndex == 3)
+            {
+                returnPlayer = player4;
             }
 
-            if (p1lessp2 == true && p3lessp4)
-            {
-                if (player1Lowest.Value < player3Lowest.Value)
-                {
-                    returnPlayer = player1;
-                }
-                else
-                {
-                    returnPlayer = player3;
-                }
-            }
-            else if (p1lessp2 == true && p3lessp4 == false)
-            {
-                if (player1Lowest.Value < player4Lowest.Value)
-                {
-                    returnPlayer = player1;
-                }
-                else
-                {
-                    returnPlayer = player4;
-                }
-            }
-            else if (p1lessp2 == false && p3lessp4 == true)
-            {
-                if (player2Lowest.Value < player3Lowest.Value)
-                {
-                    returnPlayer = player2;
-                }
-                else
-                {
-                    returnPlayer = player3;
-                }
-            }
-            else if (p1lessp2 == false && p3lessp4 == false)
-            {
-                if (player2Lowest.Value < player4Lowest.Value)
-                {
-                    returnPlayer = player2;
-                }
-                else
-                {
-                    returnPlayer = player4;
-                }
-            }
             else
             {
                 throw new Exception("Player with lowest card not determined... ERROR!");
