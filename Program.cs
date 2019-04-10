@@ -14,19 +14,18 @@ namespace durakTesting
         //declare players
         public static Player player1 = new Player("Player 1");
         public static Player player2 = new Player("Bot 2");
-        //public static Player player3 = new Player("Bot 3");
-        //public static Player player4 = new Player("Bot 4");
 
         public static List<Player> TotalPlayers = new List<Player>();
         static void Main(string[] args)
         {
             try
             {
+                // add players to the total player list
                 TotalPlayers.Add(player1);
                 TotalPlayers.Add(player2);
 
                 Deck deck1 = new Deck();
-                //Console.WriteLine(deck1.ToString());
+                // shuffle cards
                 deck1.Shuffle();
                 deck1.Shuffle();
                 deck1.Shuffle();
@@ -41,19 +40,21 @@ namespace durakTesting
 
                 Console.WriteLine("TRUMP card was set. Press any key to begin game.");
                 Console.ReadKey();
-
+                // set active player
                 Player ActivePlayer = PickFirstTurn(TotalPlayers);
+                // first turn
                 Console.WriteLine("\nPlayer going first:\n" + ActivePlayer);
                 Console.WriteLine("Select a card by pressing 1, 2 etc. Press S to skip");
                 ActivePlayer.PlayCard();
 
-                Console.WriteLine("\n-------River-------");
-                foreach(PlayingCard card in River)
-                {
-                    Console.WriteLine(card.ToString());
-                }
+                // display river
+                DisplayRiver();
+
+                //change active player
                 if (ActivePlayer.PlayerName == "Bot 2") { ActivePlayer = player1; }
                 else { ActivePlayer = player2; }
+                
+                // 2nd turn
                 Console.WriteLine("\nPlayer turn:\n" + ActivePlayer);
                 Console.WriteLine("Select a card by pressing 1, 2 etc. Press S to skip");
                 ActivePlayer.PlayCard();
@@ -79,6 +80,17 @@ namespace durakTesting
 
         }
 
+        /// <summary>
+        /// Method prints cards in the river to the console
+        /// </summary>
+        static void DisplayRiver()
+        {
+            Console.WriteLine("\n-------River-------");
+            foreach (PlayingCard card in River)
+            {
+                Console.WriteLine(card.ToString());
+            }
+        }
 
         /// <summary>
         /// Deals the card and perpares each player's hand
@@ -175,17 +187,9 @@ namespace durakTesting
                 PlayingCard playerLowest = player.LowestCard(trumpCard);
                 trumpSuitCards.Add(playerLowest);
             }
-            //PlayingCard player1Lowest = player1.LowestCard(trumpCard);
-            //trumpSuitCards.Add(player1Lowest);
-            //PlayingCard player2Lowest = player2.LowestCard(trumpCard);
-            //trumpSuitCards.Add(player2Lowest);
-            //PlayingCard player3Lowest = player3.LowestCard(trumpCard);
-            //trumpSuitCards.Add(player3Lowest);
-            //PlayingCard player4Lowest = player4.LowestCard(trumpCard);
-            //trumpSuitCards.Add(player4Lowest);
 
             int playerIndex = -1;
-            PlayingCard lowest = new PlayingCard();     //placeholder card to help compare other cards to
+            PlayingCard lowest = new PlayingCard();  //placeholder card to help compare other cards to
             lowest.Value = 99;      // give high value to start in order to check later
 
             for (int index = 0; index < trumpSuitCards.Count; index++)
@@ -204,22 +208,6 @@ namespace durakTesting
                 returnPlayer = TotalPlayers[playerIndex];
             }
 
-            //if(playerIndex == 0)
-            //{
-            //    returnPlayer = player1;
-            //}
-            //else if(playerIndex == 1)
-            //{
-            //    returnPlayer = player2;
-            //}
-            //else if (playerIndex == 2)
-            //{
-            //    returnPlayer = player3;
-            //}
-            //else if (playerIndex == 3)
-            //{
-            //    returnPlayer = player4;
-            //}
 
             if (returnPlayer == null)
             {
