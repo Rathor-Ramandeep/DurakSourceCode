@@ -9,17 +9,22 @@ namespace durakTesting
         private const int CARDS_PER_HAND = 6;
         //declare trump card
         public static PlayingCard trumpCard = null;
+        // River
+        public static List<PlayingCard> River = new List<PlayingCard>();
         //declare players
         public static Player player1 = new Player("Player 1");
         public static Player player2 = new Player("Bot 2");
-        public static Player player3 = new Player("Bot 3");
-        public static Player player4 = new Player("Bot 4");
+        //public static Player player3 = new Player("Bot 3");
+        //public static Player player4 = new Player("Bot 4");
 
+        public static List<Player> TotalPlayers = new List<Player>();
         static void Main(string[] args)
         {
             try
             {
-               
+                TotalPlayers.Add(player1);
+                TotalPlayers.Add(player2);
+
                 Deck deck1 = new Deck();
                 //Console.WriteLine(deck1.ToString());
                 deck1.Shuffle();
@@ -27,7 +32,7 @@ namespace durakTesting
                 deck1.Shuffle();
                 //Console.WriteLine("******************************");
                 //Console.WriteLine(deck1.ToString());
-                Deal(deck1);
+                Deal(deck1,2);
 
                 Console.WriteLine("Cards have been assigned. Press any key to set TRUMP card.");
                 Console.ReadKey();
@@ -37,10 +42,34 @@ namespace durakTesting
                 Console.WriteLine("TRUMP card was set. Press any key to begin game.");
                 Console.ReadKey();
 
-                Console.WriteLine("\nPlayer going first:\n" + PickFirstTurn(player1, player2, player3, player4));
+                Player ActivePlayer = PickFirstTurn(TotalPlayers);
+                Console.WriteLine("\nPlayer going first:\n" + ActivePlayer);
+                Console.WriteLine("Select a card by pressing 1, 2 etc. Press S to skip");
+                ActivePlayer.PlayCard();
+
+                Console.WriteLine("\n-------River-------");
+                foreach(PlayingCard card in River)
+                {
+                    Console.WriteLine(card.ToString());
+                }
+                if (ActivePlayer.PlayerName == "Bot 2") { ActivePlayer = player1; }
+                else { ActivePlayer = player2; }
+                Console.WriteLine("\nPlayer turn:\n" + ActivePlayer);
+                Console.WriteLine("Select a card by pressing 1, 2 etc. Press S to skip");
+                ActivePlayer.PlayCard();
+
+                Console.WriteLine("\n-------River-------");
+                foreach (PlayingCard card in River)
+                {
+                    Console.WriteLine(card.ToString());
+                }
 
                 Console.ReadKey();
-
+            }
+            catch(ArgumentNullException ee)
+            {
+                Console.WriteLine("No player had suitable trump suit cards");
+                Console.Read();
             }
             catch (Exception ex)
             {
@@ -50,6 +79,12 @@ namespace durakTesting
 
         }
 
+
+        /// <summary>
+        /// Deals the card and perpares each player's hand
+        /// </summary>
+        /// <param name="theDeck"></param>
+        /// <param name="totalPlayers"></param>
         static void Deal(Deck theDeck, int totalPlayers = 4)
         {
             if (CARDS_PER_HAND * totalPlayers > theDeck.MyDeck.Count)
@@ -81,26 +116,28 @@ namespace durakTesting
                 {
                     player2.Hand = CurrentHand;
                 }
-                if (player == 2)
-                {
-                    player3.Hand = CurrentHand;
-                }
-                if (player == 3)
-                {
-                    player4.Hand = CurrentHand;
-                }
+                //if (player == 2)
+                //{
+                //    player3.Hand = CurrentHand;
+                //}
+                //if (player == 3)
+                //{
+                //    player4.Hand = CurrentHand;
+                //}
                 //add the hand to the overall collection
                 playerHands.Add(CurrentHand);
             }
             //output player hands
             player1.Dump();
             player2.Dump();
-            player3.Dump();
-            player4.Dump();
+            //player3.Dump();
+            //player4.Dump();
 
             //Console.WriteLine("\n=======Remaining Deck=========");
             //Console.WriteLine(theDeck.ToString());
         }
+        
+        
         /// <summary>
         /// Set Trump Card - Assign trump card from remaining deck and remove respective card from deck
         /// </summary>
@@ -115,58 +152,78 @@ namespace durakTesting
             //output trump card
             Console.WriteLine("\n=======TRUMP CARD=======\n" + trumpCard);
             //display remaining deck
-            Console.WriteLine("\n=======Remaining Deck=========");
-            Console.WriteLine(theDeck.ToString());
+            //Console.WriteLine("\n=======Remaining Deck=========");
+            //Console.WriteLine(theDeck.ToString());
         }
 
-        static Player PickFirstTurn(Player player1, Player player2, Player player3, Player player4)
+
+        /// <summary>
+        /// Selects which player gos first depending on the trump card selected for the round
+        /// </summary>
+        /// <param name="player1"></param>
+        /// <param name="player2"></param>
+        /// <param name="player3"></param>
+        /// <param name="player4"></param>
+        /// <returns>Player object</returns>
+        static Player PickFirstTurn(List<Player> TotalPlayers)
         {
-            Player returnPlayer = new Player();
+            Player returnPlayer = null;
             List<PlayingCard> trumpSuitCards = new List<PlayingCard>();
-            PlayingCard player1Lowest = player1.LowestCard(trumpCard);
-            trumpSuitCards.Add(player1Lowest);
-            PlayingCard player2Lowest = player2.LowestCard(trumpCard);
-            trumpSuitCards.Add(player2Lowest);
-            PlayingCard player3Lowest = player3.LowestCard(trumpCard);
-            trumpSuitCards.Add(player3Lowest);
-            PlayingCard player4Lowest = player4.LowestCard(trumpCard);
-            trumpSuitCards.Add(player4Lowest);
+
+            foreach (Player player in TotalPlayers)
+            {
+                PlayingCard playerLowest = player.LowestCard(trumpCard);
+                trumpSuitCards.Add(playerLowest);
+            }
+            //PlayingCard player1Lowest = player1.LowestCard(trumpCard);
+            //trumpSuitCards.Add(player1Lowest);
+            //PlayingCard player2Lowest = player2.LowestCard(trumpCard);
+            //trumpSuitCards.Add(player2Lowest);
+            //PlayingCard player3Lowest = player3.LowestCard(trumpCard);
+            //trumpSuitCards.Add(player3Lowest);
+            //PlayingCard player4Lowest = player4.LowestCard(trumpCard);
+            //trumpSuitCards.Add(player4Lowest);
 
             int playerIndex = -1;
             PlayingCard lowest = new PlayingCard();     //placeholder card to help compare other cards to
             lowest.Value = 99;      // give high value to start in order to check later
 
-            for(int index = 0; index < trumpSuitCards.Count; index++)
+            for (int index = 0; index < trumpSuitCards.Count; index++)
             {
-                if(trumpSuitCards[index] !=null)
+                if (trumpSuitCards[index] != null)
                 {
-                    if(trumpSuitCards[index].Value < lowest.Value)
+                    if (trumpSuitCards[index].Value < lowest.Value)
                     {
                         playerIndex = index;
+                        lowest = trumpSuitCards[index];
                     }
                 }
             }
-
-            if(playerIndex == 0)
+            if(playerIndex != -1)
             {
-                returnPlayer = player1;
-            }
-            else if(playerIndex == 1)
-            {
-                returnPlayer = player2;
-            }
-            else if (playerIndex == 2)
-            {
-                returnPlayer = player3;
-            }
-            else if (playerIndex == 3)
-            {
-                returnPlayer = player4;
+                returnPlayer = TotalPlayers[playerIndex];
             }
 
-            else
+            //if(playerIndex == 0)
+            //{
+            //    returnPlayer = player1;
+            //}
+            //else if(playerIndex == 1)
+            //{
+            //    returnPlayer = player2;
+            //}
+            //else if (playerIndex == 2)
+            //{
+            //    returnPlayer = player3;
+            //}
+            //else if (playerIndex == 3)
+            //{
+            //    returnPlayer = player4;
+            //}
+
+            if (returnPlayer == null)
             {
-                throw new Exception("Player with lowest card not determined... ERROR!");
+                throw new ArgumentNullException("Player with lowest card not determined... ERROR!");
             }
             return returnPlayer;
         }

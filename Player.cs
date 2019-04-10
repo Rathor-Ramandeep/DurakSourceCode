@@ -44,7 +44,34 @@ namespace durakTesting
         /// </summary>
         virtual public void PlayCard()
         {
-
+            char userInput = Console.ReadKey().KeyChar;
+            if (userInput == '1')
+            {
+                Program.River.Add(Hand[0]);
+            }
+            else if (userInput == '2')
+            {
+                Program.River.Add(Hand[1]);
+            }
+            else if (userInput == '3')
+            {
+                Program.River.Add(Hand[2]);
+            }
+            else if (userInput == '4')
+            {
+                Program.River.Add(Hand[3]);
+            }
+            else if (userInput == '5')
+            {
+                Program.River.Add(Hand[4]);
+            }
+            else if (userInput == '6')
+            {
+                Program.River.Add(Hand[5]);
+            }
+            else if (userInput == 'S'|| userInput =='s')
+            {
+            }
         }
 
         public PlayingCard LowestCard(PlayingCard trumpCard)
