@@ -51,6 +51,13 @@ namespace durakTesting
                     Console.WriteLine("Select a card by pressing 1, 2 etc. Press S to skip");
                     ActivePlayer.PlayCard();
 
+                    // if there are cards in the deck, replenish the hand
+                    if(deck1.MyDeck.Count != 0)
+                    {
+                        ActivePlayer.Hand.Add(deck1.MyDeck[0]);
+                        deck1.MyDeck.RemoveAt(0);
+                    }
+
                     // check if any player is finished their cards
                     if (ActivePlayer.Hand.Count <= 0)
                     {

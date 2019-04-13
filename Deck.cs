@@ -51,55 +51,48 @@ namespace durakTesting
             }
             if(size == NORMAL_DECK_SIZE)
             {
-                for (int i = 0; i < size; i++)
+                
+                for (int suits = 0; suits < PlayingCard.SUITS; suits++)
                 {
-                    for (int suits = 0; suits < PlayingCard.SUITS; suits++)
+                    for (int ranks = 4; ranks < PlayingCard.RANKS; ranks++)
                     {
-                        for (int ranks = 4; ranks < PlayingCard.RANKS; ranks++)
+                        PlayingCard card = new PlayingCard(ranks, suits);
+                        if (MyDeck.Count < size)
                         {
-                            PlayingCard card = new PlayingCard(ranks, suits);
-                            if (MyDeck.Count < size)
-                            {
-                                MyDeck.Add(card);
-                            }
+                            MyDeck.Add(card);
                         }
                     }
                 }
+
             }
             else if(size == FULL_DECK_SIZE)
-            {
-                for (int i = 0; i < size; i++)
+            {   
+                for (int suits = 0; suits < PlayingCard.SUITS; suits++)
                 {
-                    for (int suits = 0; suits < PlayingCard.SUITS; suits++)
+                    for (int ranks = 0; ranks < PlayingCard.RANKS; ranks++)
                     {
-                        for (int ranks = 0; ranks < PlayingCard.RANKS; ranks++)
+                        PlayingCard card = new PlayingCard();
+                        card.Suit = suits;
+                        card.Rank = ranks;
+                        if (MyDeck.Count < size)
                         {
-                            PlayingCard card = new PlayingCard();
-                            card.Suit = suits;
-                            card.Rank = ranks;
-                            if (MyDeck.Count < size)
-                            {
-                                MyDeck.Add(card);
-                            }
+                            MyDeck.Add(card);
                         }
                     }
                 }
             }
             else if (size == SMALL_DECK_SIZE)
             {
-                for (int i = 0; i < size; i++)
+                for (int suits = 0; suits < PlayingCard.SUITS; suits++)
                 {
-                    for (int suits = 0; suits < PlayingCard.SUITS; suits++)
+                    for (int ranks = 8; ranks < PlayingCard.RANKS; ranks++)
                     {
-                        for (int ranks = 8; ranks < PlayingCard.RANKS; ranks++)
+                        PlayingCard card = new PlayingCard();
+                        card.Suit = suits;
+                        card.Rank = ranks;
+                        if (MyDeck.Count < size)
                         {
-                            PlayingCard card = new PlayingCard();
-                            card.Suit = suits;
-                            card.Rank = ranks;
-                            if (MyDeck.Count < size)
-                            {
-                                MyDeck.Add(card);
-                            }
+                            MyDeck.Add(card);
                         }
                     }
                 }
@@ -111,7 +104,7 @@ namespace durakTesting
         {
             for (int index = 0; index < MyDeck.Count; index++)
             {
-                Random rand = new Random(new System.DateTime().Millisecond);
+                Random rand = new Random();
                 // find a Random spot for remaining positions. 
                 int swapTarget = index + (rand.Next(MyDeck.Count - index));
                 //swap between random spot and index
