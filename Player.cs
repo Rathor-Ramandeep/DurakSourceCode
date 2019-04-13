@@ -48,30 +48,39 @@ namespace durakTesting
             if (userInput == '1')
             {
                 Program.River.Add(Hand[0]);
+                Hand.RemoveAt(0);
             }
             else if (userInput == '2')
             {
                 Program.River.Add(Hand[1]);
+                Hand.RemoveAt(1);
             }
             else if (userInput == '3')
             {
                 Program.River.Add(Hand[2]);
+                Hand.RemoveAt(2);
             }
             else if (userInput == '4')
             {
                 Program.River.Add(Hand[3]);
+                Hand.RemoveAt(3);
             }
             else if (userInput == '5')
             {
                 Program.River.Add(Hand[4]);
+                Hand.RemoveAt(4);
             }
             else if (userInput == '6')
             {
                 Program.River.Add(Hand[5]);
+                Hand.RemoveAt(5);
             }
             else if (userInput == 'S'|| userInput =='s')
             {
             }
+
+            Program.DisplayRiver();
+
         }
 
         public PlayingCard LowestCard(PlayingCard trumpCard)

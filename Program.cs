@@ -29,43 +29,42 @@ namespace durakTesting
                 deck1.Shuffle();
                 deck1.Shuffle();
                 deck1.Shuffle();
-                //Console.WriteLine("******************************");
-                //Console.WriteLine(deck1.ToString());
+                
+                // deal the deck between 2 players
                 Deal(deck1,2);
 
                 Console.WriteLine("Cards have been assigned. Press any key to set TRUMP card.");
                 Console.ReadKey();
 
+                // set trump card
                 SetTrump(deck1);
 
                 Console.WriteLine("TRUMP card was set. Press any key to begin game.");
                 Console.ReadKey();
+
                 // set active player
                 Player ActivePlayer = PickFirstTurn(TotalPlayers);
-                // first turn
-                Console.WriteLine("\nPlayer going first:\n" + ActivePlayer);
-                Console.WriteLine("Select a card by pressing 1, 2 etc. Press S to skip");
-                ActivePlayer.PlayCard();
-
-                // display river
-                DisplayRiver();
-
-                //change active player
-                if (ActivePlayer.PlayerName == "Bot 2") { ActivePlayer = player1; }
-                else { ActivePlayer = player2; }
-                
-                // 2nd turn
-                Console.WriteLine("\nPlayer turn:\n" + ActivePlayer);
-                Console.WriteLine("Select a card by pressing 1, 2 etc. Press S to skip");
-                ActivePlayer.PlayCard();
-
-                Console.WriteLine("\n-------River-------");
-                foreach (PlayingCard card in River)
+                while(TotalPlayers.Count > 1)
                 {
-                    Console.WriteLine(card.ToString());
+                    // first turn
+                    Console.WriteLine("\nIts your turn:\n" + ActivePlayer);
+                    Console.WriteLine("Select a card by pressing 1, 2 etc. Press S to skip");
+                    ActivePlayer.PlayCard();
+
+                    // check if any player is finished their cards
+                    if (ActivePlayer.Hand.Count <= 0)
+                    {
+                        TotalPlayers.Remove(ActivePlayer);
+                        Console.WriteLine("\n*********GAME OVER**********");
+                    }
+
+                    //change active player
+                    if (ActivePlayer.PlayerName == "Bot 2") { ActivePlayer = player1; }
+                    else { ActivePlayer = player2; }
+
+                    Console.ReadKey();
                 }
 
-                Console.ReadKey();
             }
             catch(ArgumentNullException ee)
             {
@@ -83,7 +82,7 @@ namespace durakTesting
         /// <summary>
         /// Method prints cards in the river to the console
         /// </summary>
-        static void DisplayRiver()
+        public static void DisplayRiver()
         {
             Console.WriteLine("\n-------River-------");
             foreach (PlayingCard card in River)
