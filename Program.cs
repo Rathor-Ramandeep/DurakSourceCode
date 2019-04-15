@@ -28,7 +28,6 @@ namespace durakTesting
                 // shuffle cards
                 deck1.Shuffle();
                 deck1.Shuffle();
-                deck1.Shuffle();
                 
                 // deal the deck between 2 players
                 Deal(deck1,2);
@@ -46,10 +45,29 @@ namespace durakTesting
                 Player ActivePlayer = PickFirstTurn(TotalPlayers);
                 while(TotalPlayers.Count > 1)
                 {
-                    // first turn
+                    // player turn
                     Console.WriteLine("\nIts your turn:\n" + ActivePlayer);
                     Console.WriteLine("Select a card by pressing 1, 2 etc. Press S to skip");
                     ActivePlayer.PlayCard();
+                    if(River.Count > 1)
+                    {
+                        // on successful defence, defender becomes attacker
+                        if(CardCompare())
+                        {
+                            Console.WriteLine("\nIts your turn:\n" + ActivePlayer);
+                            Console.WriteLine("Select a card by pressing 1, 2 etc. Press S to skip");
+                            ActivePlayer.PlayCard();
+                            River.Clear();
+                        }
+                        else // failed defence results in defender taking the cards in the river
+                        {
+                            foreach(PlayingCard card in River)
+                            {
+                                ActivePlayer.Hand.Add(card);
+                            }
+                            River.Clear();
+                        }
+                    }
 
                     // if there are cards in the deck, replenish the hand
                     if(deck1.MyDeck.Count != 0)
@@ -76,6 +94,7 @@ namespace durakTesting
             catch(ArgumentNullException ee)
             {
                 Console.WriteLine("No player had suitable trump suit cards");
+                Console.WriteLine("The program will end");
                 Console.Read();
             }
             catch (Exception ex)
@@ -222,6 +241,27 @@ namespace durakTesting
             return returnPlayer;
         }
 
+
+        /// <summary>
+        /// Method compares the last two cards in the river. This is used to see
+        /// if a defence was successfull
+        /// </summary>
+        static bool CardCompare()
+        {
+            bool defended = false;
+            // compare the last two cards in the river
+            if(River[River.Count-1].Rank > River[River.Count - 2].Rank)
+            {
+                Console.WriteLine("DEFENDED SUCCESSFULLY");
+                defended = true;
+            }
+            else
+            {
+                Console.WriteLine("DEFEND FAILED");
+            }
+
+            return defended;
+        }
 
     }
 }
