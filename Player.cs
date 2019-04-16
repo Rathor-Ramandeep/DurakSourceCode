@@ -10,7 +10,7 @@ namespace durakTesting
     {
         private List<PlayingCard> hand = new List<PlayingCard>();
         private String playerName;
-        public bool playerAttacking = true;
+        public bool playerAttacking = false;
 
         public Player()
         {
@@ -47,7 +47,7 @@ namespace durakTesting
                     foreach (var card in Hand)
                     {
                         if (playerAttacking) // for attackers they can only play cards
-                            //with ranks that are already in the river
+                                             //with ranks that are already in the river
                         {
                             if (card.Rank == item.Rank)
                             {
@@ -58,7 +58,7 @@ namespace durakTesting
                         else // for defenders they can only play cards that are the same
                         // suit as ones in the river
                         {
-                            if (card.Suit == item.Suit)
+                            if (card.Suit == item.Suit && card.Rank > item.Rank)
                             {
                                 PlayableCards.Add(card);
                                 PlayableIndexes.Add(Hand.IndexOf(card));
@@ -89,8 +89,13 @@ namespace durakTesting
             }
             
             // validate user input
+            if(PlayableIndexes.Count == 0)
+            {
+                Console.WriteLine("NO PLAYABLE CARDS");
+                PlayableIndexes.Add(999);
+            }
+            
             ValidateInput(PlayableIndexes);
-
             Program.DisplayRiver();
 
         }
@@ -146,11 +151,12 @@ namespace durakTesting
         public override String ToString()
         {
             StringBuilder builder = new StringBuilder();
-            builder.Append("\n******Player " + this.PlayerName + " Hand******");
-            //foreach (PlayingCard card in Hand)
-            //{
-            //    builder.Append("\n" + card);
-            //}
+            builder.Append("\n******Player " + this.PlayerName + 
+                (this.playerAttacking ? " Attacker":" Defender"));
+            foreach (PlayingCard card in Hand)
+            {
+                builder.Append("\n" + card);
+            }
             return builder.ToString();
         }
 
@@ -173,7 +179,14 @@ namespace durakTesting
                     Console.WriteLine(item);
                 }
             }
-
+            if(userInput == 999)
+            {
+                //if (playerAttacking)
+                //{
+                //    playerAttacking = false;
+                //}
+                return userInput;
+            }
             foreach (var item in indexes)
             {
                 if (userInput == item)

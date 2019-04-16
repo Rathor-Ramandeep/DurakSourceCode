@@ -12,8 +12,8 @@ namespace durakTesting
         // River
         public static List<PlayingCard> River = new List<PlayingCard>();
         //declare players
-        public static Player player1 = new Player("Player 1");
-        public static Player player2 = new Player("Bot 2");
+        public static Player player1 = new Player("Musab");
+        public static Player player2 = new Player("Soban");
 
         public static List<Player> TotalPlayers = new List<Player>();
         static void Main(string[] args)
@@ -38,6 +38,8 @@ namespace durakTesting
                 // set trump card
                 SetTrump(deck1);
 
+                int riverCount = 0;
+
                 Console.WriteLine("TRUMP card was set. Press any key to begin game.");
                 Console.ReadKey();
 
@@ -47,26 +49,35 @@ namespace durakTesting
                 {
                     // player turn
                     Console.WriteLine("\nIts your turn:\n" + ActivePlayer);
-                    Console.WriteLine("Select a card by pressing 1, 2 etc. Press S to skip");
+                    Console.WriteLine("Select a card by pressing 1, 2 etc. Enter 999 to skip");
+                    riverCount = River.Count;
                     ActivePlayer.PlayCard();
-                    if(River.Count > 1)
+                    if(River.Count != riverCount)
                     {
                         // on successful defence, defender becomes attacker
-                        if(CardCompare())
+                        //CardCompare();
+                    }
+                    else if(River.Count == riverCount && ActivePlayer.playerAttacking)
+                    { 
+                        ActivePlayer.playerAttacking = false;
+                        if (ActivePlayer.PlayerName == "Soban")
                         {
-                            Console.WriteLine("\nIts your turn:\n" + ActivePlayer);
-                            Console.WriteLine("Select a card by pressing 1, 2 etc. Press S to skip");
-                            ActivePlayer.PlayCard();
-                            River.Clear();
-                        }
-                        else // failed defence results in defender taking the cards in the river
-                        {
-                            foreach(PlayingCard card in River)
+                            player1.playerAttacking = true;
+                            foreach (var item in River)
                             {
-                                ActivePlayer.Hand.Add(card);
+                                player1.Hand.Add(item); 
                             }
-                            River.Clear();
+                        
                         }
+                        else
+                        {
+                            player2.playerAttacking = true;
+                            foreach (var item in River)
+                            {
+                                player2.Hand.Add(item);
+                            }
+                        }
+                        River.Clear();
                     }
 
                     // if there are cards in the deck, replenish the hand
@@ -84,7 +95,7 @@ namespace durakTesting
                     }
 
                     //change active player
-                    if (ActivePlayer.PlayerName == "Bot 2") { ActivePlayer = player1; }
+                    if (ActivePlayer.PlayerName == "Soban") { ActivePlayer = player1; }
                     else { ActivePlayer = player2; }
 
                     Console.ReadKey();
@@ -231,6 +242,7 @@ namespace durakTesting
             if(playerIndex != -1)
             {
                 returnPlayer = TotalPlayers[playerIndex];
+                returnPlayer.playerAttacking = true;
             }
 
 
