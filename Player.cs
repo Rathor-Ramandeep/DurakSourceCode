@@ -32,7 +32,7 @@ namespace durakTesting
         public List<PlayingCard> Hand { get => hand; set => hand = value; }
         public string PlayerName { get => playerName; set => playerName = value; }
 
-        
+
         /// <summary>
         /// PlayCard - Method for playing a card from hand
         /// </summary>
@@ -42,7 +42,7 @@ namespace durakTesting
             List<PlayingCard> PlayableCards = new List<PlayingCard>();
             List<int> PlayableIndexes = new List<int>();
 
-            if(Program.River.Count >= 1)
+            if (Program.River.Count >= 1)
             {
                 // populate playable cards list
                 foreach (var item in Program.River)
@@ -61,53 +61,23 @@ namespace durakTesting
             else
             {
                 PlayableCards = Hand;
+                foreach(var item in Hand)
+                {
+                    PlayableIndexes.Add(Hand.IndexOf(item));
+                }
+                
             }
 
             foreach (var item in PlayableCards)
             {
                 Console.WriteLine(item);
             }
-            //if(PlayingIndexes != null)
-            //{
-            //    Console.WriteLine(PlayingIndexes);
-            //}
+            foreach (var item in PlayableIndexes)
+            {
+                Console.WriteLine(item);
+            }
 
-            // get user input
-            char userInput = Console.ReadKey().KeyChar;
-
-            if (userInput == '1')
-            {
-                Program.River.Add(Hand[0]);
-                Hand.RemoveAt(0);
-            }
-            else if (userInput == '2')
-            {
-                Program.River.Add(Hand[1]);
-                Hand.RemoveAt(1);
-            }
-            else if (userInput == '3')
-            {
-                Program.River.Add(Hand[2]);
-                Hand.RemoveAt(2);
-            }
-            else if (userInput == '4')
-            {
-                Program.River.Add(Hand[3]);
-                Hand.RemoveAt(3);
-            }
-            else if (userInput == '5')
-            {
-                Program.River.Add(Hand[4]);
-                Hand.RemoveAt(4);
-            }
-            else if (userInput == '6')
-            {
-                Program.River.Add(Hand[5]);
-                Hand.RemoveAt(5);
-            }
-            else if (userInput == 'S'|| userInput =='s')
-            {
-            }
+            ValidateInput(PlayableIndexes);
 
             Program.DisplayRiver();
 
@@ -122,27 +92,27 @@ namespace durakTesting
             List<PlayingCard> cardsWithTrumpSuit = new List<PlayingCard>();
 
             //find all cards that match trump card suit
-            foreach(PlayingCard card in this.Hand)
+            foreach (PlayingCard card in this.Hand)
             {
                 if (card.Suit == trumpCard.Suit)
                     cardsWithTrumpSuit.Add(card);
             }
             //find lowest card in cardsWithTrumpSuit if anything was added in cardsWithTrumpSuit
-            if(cardsWithTrumpSuit.Count > 0)
+            if (cardsWithTrumpSuit.Count > 0)
             {
                 //assume first card is the smallest
                 PlayingCard minValueCard = cardsWithTrumpSuit[0];
                 // iterate through the list to find the actual smallest card
                 for (int i = 0; i <= cardsWithTrumpSuit.Count - 2; i++)
-                {   
-                    if (cardsWithTrumpSuit[i+1].Value < minValueCard.Value)
+                {
+                    if (cardsWithTrumpSuit[i + 1].Value < minValueCard.Value)
                     {
                         minValueCard = cardsWithTrumpSuit[i + 1];
                     }
                 }
                 theCard = minValueCard;
             }
-            
+
             return theCard;
         }
 
@@ -154,12 +124,49 @@ namespace durakTesting
         public override String ToString()
         {
             StringBuilder builder = new StringBuilder();
-            builder.Append("\n******Player " + this.PlayerName +" Hand******");
+            builder.Append("\n******Player " + this.PlayerName + " Hand******");
             //foreach (PlayingCard card in Hand)
             //{
             //    builder.Append("\n" + card);
             //}
             return builder.ToString();
+        }
+
+        public int ValidateInput(List<int> indexes)
+        {
+            // get user input
+            int userInput;
+            bool isValid = false;
+            while (!Int32.TryParse(Console.ReadLine(), out userInput))
+            {
+                Console.WriteLine("Enter  NUERIC VALUE.");
+                foreach (var item in indexes)
+                {
+                    Console.WriteLine(item);
+                }
+            }
+
+            foreach (var item in indexes)
+            {
+                if (userInput == item)
+                {
+                    // Add the card to the river and remove from hand
+                    Program.River.Add(Hand[userInput]);
+                    Hand.RemoveAt(userInput);
+                    isValid = true;
+                }
+            }
+            if (!isValid)
+            {
+                Console.WriteLine("Invalid card selected. Please try again");
+                Console.WriteLine("Playable Index are: ");
+                foreach (var item in indexes)
+                {
+                    Console.WriteLine(item);
+                }
+                ValidateInput(indexes);
+            }
+            return userInput;
         }
 
 

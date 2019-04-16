@@ -258,10 +258,10 @@ namespace durakTesting
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns> True if the values of the cards are the same
-        public override bool Equals(object obj)
-        {
-            return (Value == ((PlayingCard)obj).Value);
-        }
+        //public override bool Equals(object obj)
+        //{
+        //    return (Value == ((PlayingCard)obj).Value);
+        //}
 
         public Image GetImage()
         {
