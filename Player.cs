@@ -8,11 +8,9 @@ namespace durakTesting
 {
     public class Player
     {
-        //private readonly PlayingCard[] card = new PlayingCard[5];
-        //private List<List<PlayingCard>> playerHands = new List<List<PlayingCard>>();
-
         private List<PlayingCard> hand = new List<PlayingCard>();
         private String playerName;
+        public bool playerAttacking = true;
 
         public Player()
         {
@@ -25,10 +23,6 @@ namespace durakTesting
             this.PlayerName = playerName;
         }
 
-
-
-        public static bool playerAttacking;
-
         public List<PlayingCard> Hand { get => hand; set => hand = value; }
         public string PlayerName { get => playerName; set => playerName = value; }
 
@@ -38,10 +32,13 @@ namespace durakTesting
         /// </summary>
         virtual public void PlayCard()
         {
-            // list that holds playable options
+            // list that holds playable options for a player
             List<PlayingCard> PlayableCards = new List<PlayingCard>();
+            
+            // list that holds the indexes of the playable cards in the hand
             List<int> PlayableIndexes = new List<int>();
-
+            
+            // if its not the forst turn
             if (Program.River.Count >= 1)
             {
                 // populate playable cards list
@@ -49,17 +46,31 @@ namespace durakTesting
                 {
                     foreach (var card in Hand)
                     {
-                        if (card.Suit == item.Suit)
+                        if (playerAttacking) // for attackers they can only play cards
+                            //with ranks that are already in the river
                         {
-                            PlayableCards.Add(card);
-                            PlayableIndexes.Add(Hand.IndexOf(card));
+                            if (card.Rank == item.Rank)
+                            {
+                                PlayableCards.Add(card);
+                                PlayableIndexes.Add(Hand.IndexOf(card));
+                            }
+                        }
+                        else // for defenders they can only play cards that are the same
+                        // suit as ones in the river
+                        {
+                            if (card.Suit == item.Suit)
+                            {
+                                PlayableCards.Add(card);
+                                PlayableIndexes.Add(Hand.IndexOf(card));
+                            }
                         }
                     }
                 }
 
             }
-            else
+            else // if its the first turn
             {
+                // all cards in the hand are playable
                 PlayableCards = Hand;
                 foreach(var item in Hand)
                 {
@@ -76,13 +87,19 @@ namespace durakTesting
             {
                 Console.WriteLine(item);
             }
-
+            
+            // validate user input
             ValidateInput(PlayableIndexes);
 
             Program.DisplayRiver();
 
         }
 
+        /// <summary>
+        /// Finds the lowest card of a particular suit.
+        /// </summary>
+        /// <param name="trumpCard"></param>
+        /// <returns>PlayingCard object</returns>
         public PlayingCard LowestCard(PlayingCard trumpCard)
         {
             //create playing card object to return
@@ -121,6 +138,11 @@ namespace durakTesting
             Console.WriteLine(ToString());
         }
 
+
+        /// <summary>
+        /// To String override
+        /// </summary>
+        /// <returns></returns>
         public override String ToString()
         {
             StringBuilder builder = new StringBuilder();
@@ -132,6 +154,12 @@ namespace durakTesting
             return builder.ToString();
         }
 
+
+        /// <summary>
+        /// Validates user iput for selecting what card they want to play
+        /// </summary>
+        /// <param name="indexes"></param>
+        /// <returns>an integer that maps directly to the index of a card in their hand</returns>
         public int ValidateInput(List<int> indexes)
         {
             // get user input
@@ -139,7 +167,7 @@ namespace durakTesting
             bool isValid = false;
             while (!Int32.TryParse(Console.ReadLine(), out userInput))
             {
-                Console.WriteLine("Enter  NUERIC VALUE.");
+                Console.WriteLine("Enter  NUMERIC value.");
                 foreach (var item in indexes)
                 {
                     Console.WriteLine(item);
@@ -156,6 +184,7 @@ namespace durakTesting
                     isValid = true;
                 }
             }
+            // if the index doesn't match the ones they can play
             if (!isValid)
             {
                 Console.WriteLine("Invalid card selected. Please try again");
