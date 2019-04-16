@@ -32,19 +32,49 @@ namespace durakTesting
         public List<PlayingCard> Hand { get => hand; set => hand = value; }
         public string PlayerName { get => playerName; set => playerName = value; }
 
-        /// <summary>
-        /// TakeCard - Method for taking a card from the pile
-        /// </summary>
-        public void TakeCard()
-        {
-
-        }
+        
         /// <summary>
         /// PlayCard - Method for playing a card from hand
         /// </summary>
         virtual public void PlayCard()
         {
+            // list that holds playable options
+            List<PlayingCard> PlayableCards = new List<PlayingCard>();
+            List<int> PlayableIndexes = new List<int>();
+
+            if(Program.River.Count >= 1)
+            {
+                // populate playable cards list
+                foreach (var item in Program.River)
+                {
+                    foreach (var card in Hand)
+                    {
+                        if (card.Suit == item.Suit)
+                        {
+                            PlayableCards.Add(card);
+                            PlayableIndexes.Add(Hand.IndexOf(card));
+                        }
+                    }
+                }
+
+            }
+            else
+            {
+                PlayableCards = Hand;
+            }
+
+            foreach (var item in PlayableCards)
+            {
+                Console.WriteLine(item);
+            }
+            //if(PlayingIndexes != null)
+            //{
+            //    Console.WriteLine(PlayingIndexes);
+            //}
+
+            // get user input
             char userInput = Console.ReadKey().KeyChar;
+
             if (userInput == '1')
             {
                 Program.River.Add(Hand[0]);
@@ -125,10 +155,10 @@ namespace durakTesting
         {
             StringBuilder builder = new StringBuilder();
             builder.Append("\n******Player " + this.PlayerName +" Hand******");
-            foreach (PlayingCard card in Hand)
-            {
-                builder.Append("\n" + card);
-            }
+            //foreach (PlayingCard card in Hand)
+            //{
+            //    builder.Append("\n" + card);
+            //}
             return builder.ToString();
         }
 
